@@ -61,6 +61,14 @@ json_file_path = 'history.json'
 st.title('Content Generation with history 💡')
 but = st.button("generate", type='primary')
 
+Approach = st.text_input(label='Approch',value='Creator/Influencer')
+Focus = st.text_input(label='Focus',value='Fashion and Beauty')
+Target_Audience = st.text_input(label='Target Audience',value='Hobbyists, Beginners, Enthusiasts')
+Emotions_evoked = st.text_input(label='Emotion Evoked',value='Uplifting, Inspiration/Motivation')
+Values_represented = st.text_input(label='Value Represented',value='Entertainment, Inspiration/Motivation')
+Motivations = st.text_input(label='Motivations',value='Passion/Hobby, Positive impact, Personal experiences')
+Brand_Vision = st.text_input(label='Brand Vision',value='Empowering individuals to express themselves through fashion and beauty, while promoting positivity and self-love.')
+
 if but:
     # Open the JSON file and load the data
     with open(json_file_path, 'r') as file:
@@ -74,14 +82,14 @@ if but:
     else:
         summary = ''
     
-    idea, token_genrated_idea, token_input_idea, response_time_idea, cost_idea = ideagen(company_profile="""
-Approach: Creator/Influencer
-Focus: Fashion and Beauty
-Target Audience: Hobbyists, Beginners, Enthusiasts
-Emotions evoked: Uplifting, Inspiration/Motivation
-Values represented: Entertainment, Inspiration/Motivation
-Motivations: Passion/Hobby, Positive impact, Personal experiences
-Brand Vision: "Empowering individuals to express themselves through fashion and beauty, while promoting positivity and self-love." """, summary=summary)
+    idea, token_genrated_idea, token_input_idea, response_time_idea, cost_idea = ideagen(company_profile=f"""
+Approach: {Approach}
+Focus: {Focus}
+Target Audience: {Target_Audience}
+Emotions evoked: {Emotions_evoked}
+Values represented: {Values_represented}
+Motivations: {Motivations}
+Brand Vision: {Brand_Vision} """, summary=summary)
     
     idea_updated = [{i: j} for i, j in idea.items()]
     idea_his = ' \n'.join(idea_history)

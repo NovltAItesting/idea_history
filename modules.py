@@ -101,6 +101,56 @@ def summerize(idea_history):
     return output,token_genrated,token_input,response_time,cost
 
 
+# def ideagen(company_profile,summary):
+
+#     system_prompt = "I want you to act as a social media strategist specializing in Social media  engagement and content creation. My first request is to generate ideas for social media that are concise, engaging, and tailored to the target audience and Brand Vision."
+
+#     user_prompt = f"""
+
+#     {company_profile}
+
+#    Strictly follow this output format:
+# - "Narrative Idea Title": "Narrative idea description (under 25 words)"
+
+#     ### Sample JSON Output
+#     {{
+#         "Redefining Beauty: Embracing Your Uniqueness": "Celebrate diverse beauty, emphasizing self-acceptance and sharing tips on embracing personal features and imperfections."
+#     }}
+
+#     I need you to write content with a good balance of “perplexity” and “burstiness”.
+
+#     ### Ideas History Summary:
+#     {summary}
+
+#     ### Strict Rules
+
+#     1) Generate exactly 5 ideas.
+#     2) Ensure the ideas are distinct from those in the history summary.
+
+
+#     """
+
+   
+
+
+
+
+#     input_string = f"[INST] <<SYS>>\n{system_prompt}\n<<SYS>>\n{user_prompt} [/INST]"
+#     response = query_model_json(input_string)
+#     output =response['results'][0]['generated_text']
+#     token_genrated = response['inference_status']['tokens_generated']
+#     token_input = response['inference_status']['tokens_input']
+#     response_time = response['inference_status']['runtime_ms']
+#     cost = response['inference_status']['cost']
+#     json_object = json.loads(output)
+    
+
+#     return json_object,token_genrated,token_input,response_time,cost
+
+
+
+
+
 def ideagen(company_profile,summary):
 
     system_prompt = "I want you to act as a social media strategist specializing in Social media  engagement and content creation. My first request is to generate ideas for social media that are concise, engaging, and tailored to the target audience and Brand Vision."
@@ -110,11 +160,22 @@ def ideagen(company_profile,summary):
     {company_profile}
 
    Strictly follow this output format:
-- "Narrative Idea Title": "Narrative idea description (under 25 words)"
+   Output Format:
+
+"Working Title": "A clear, concise, and engaging title that summarizes the main topic or focus of the content."
+"Target Audience": "A specific description of the intended audience for the content, including their interests, demographics, and pain points."
+"Short Key Message": "A brief statement that encapsulates the main takeaway or purpose of the content."
 
     ### Sample JSON Output
     {{
-        "Redefining Beauty: Embracing Your Uniqueness": "Celebrate diverse beauty, emphasizing self-acceptance and sharing tips on embracing personal features and imperfections."
+            "Content Idea 1": {{
+        "Working Title": "Family Fun at the Farm: U-Pick Your Own Adventure",
+        "Target Audience": "Families with young children looking for outdoor activities and a chance to connect with nature.",
+        "Short Key Message": "Create lasting memories while harvesting your own fresh produce at our family-friendly U-pick farm."
+    }}
+
+
+
     }}
 
     I need you to write content with a good balance of “perplexity” and “burstiness”.
@@ -146,3 +207,69 @@ def ideagen(company_profile,summary):
     
 
     return json_object,token_genrated,token_input,response_time,cost
+
+
+
+
+def script(narrative,post_structure,social_channel,goal,post_type,target_Audience,short_key_message):
+
+    system_prompt = f"""
+            Role: Movie Director. Provide strategic advice for creating content on specific social media channels. The guidance should help the user develop their content by focusing on strategic and creative aspects.
+
+            Input Parameters:
+
+            Narrative : The central theme or storyline for the content is : {narrative}. Validates if the narrative is coherent and suitable for social media.
+            Social Channel : The intended social media platform {social_channel}. Tailors advice to the platform's specific features and audience demographics.
+            Post Type : The content format type is {post_type}. Checks if the post type is appropriate for both the narrative and the platform.
+            Goal : The main objective of the post is to {goal}. Ensures the goal is clearly defined and aligns with the narrative and post type.
+            Target Audience : A specific description of the intended audience is {target_Audience}. Validates that the target audience is clear and suitable for the content.
+            Short Key Message : A concise message that the content aims to communicate is {short_key_message}. Validates that the message is compelling and aligns with the narrative and audience.
+        
+            
+            
+            ### Error Handling Format:
+            {{
+            "error": true,
+            "errors": [
+                {{
+                "parameter": "[parameter_name]",
+                "message": "[Specific error message for the parameter.]"
+                }}
+            // Additional errors for other parameters.
+            ]
+            }}
+
+            
+
+            ### Output Format 
+
+            
+            {post_structure}
+
+            
+            Before proceeding with the guidance, the system validates each parameter. If one or more parameters are found to be illogical, missing, or inappropriate, the system generates a JSON response detailing errors for each problematic parameter:
+
+            ### Rules
+            1. output should be only json, no extra content .
+            2.strictly follow output format.
+            3.strictly follow error handling format.
+
+            """
+
+
+        
+    
+    input_string = f"[INST] <<SYS>>\n{system_prompt}\n<<SYS>>[/INST]"
+    
+    print("input______   ", input_string)
+    response = query_model_json(input_string)
+    
+    token_genrated = response['inference_status']['tokens_generated']
+    token_input = response['inference_status']['tokens_input']
+    response_time = response['inference_status']['runtime_ms']
+    cost = response['inference_status']['cost']
+    output = json.loads(response['results'][0]['generated_text'])
+    return output,token_genrated,token_input,response_time,cost
+
+
+

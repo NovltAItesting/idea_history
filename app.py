@@ -75,7 +75,7 @@ if but:
         existing_json_data = json.load(file)
     
     # Extract idea history from existing JSON data
-    idea_history = [list(i.keys())[0] for i in existing_json_data]
+    idea_history = [ i[list(i.keys())[0]]['Working Title'] for i in existing_json_data]
     
     if len(idea_history) > 0:
         summary, token_genrated_summary, token_input_summary, response_time_summary, cost_summary = summerize(idea_history)

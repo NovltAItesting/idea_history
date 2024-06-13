@@ -211,9 +211,10 @@ def ideagen(company_profile,summary):
 
 
 
-def script(narrative,post_structure,social_channel,goal,post_type,target_Audience,short_key_message):
+def script(narrative,post_structure,social_channel,goal,post_type,target_Audience,short_key_message,error):
 
     system_prompt = f"""
+           
             Role: Movie Director. Provide strategic advice for creating content on specific social media channels. The guidance should help the user develop their content by focusing on strategic and creative aspects.
 
             Input Parameters:
@@ -227,17 +228,8 @@ def script(narrative,post_structure,social_channel,goal,post_type,target_Audienc
         
             
             
-            ### Error Handling Format:
-            {{
-            "error": true,
-            "errors": [
-                {{
-                "parameter": "[parameter_name]",
-                "message": "[Specific error message for the parameter.]"
-                }}
-            // Additional errors for other parameters.
-            ]
-            }}
+            ### Error Handling output Format:
+            {error}
 
             
 
@@ -247,12 +239,13 @@ def script(narrative,post_structure,social_channel,goal,post_type,target_Audienc
             {post_structure}
 
             
-            Before proceeding with the guidance, the system validates each parameter. If one or more parameters are found to be illogical, missing, or inappropriate, the system generates a JSON response detailing errors for each problematic parameter:
+            
 
             ### Rules
             1. output should be only json, no extra content .
-            2.strictly follow output format.
-            3.strictly follow error handling format.
+            2. strictly follow output format.
+            3. strictly follow error handling format.
+            4. Before proceeding with the guidance, the system validates each parameter. If one or more parameters are found to be illogical, missing, or inappropriate, the system generates a JSON response detailing errors for each problematic parameter
 
             """
 
@@ -268,7 +261,17 @@ def script(narrative,post_structure,social_channel,goal,post_type,target_Audienc
     token_input = response['inference_status']['tokens_input']
     response_time = response['inference_status']['runtime_ms']
     cost = response['inference_status']['cost']
-    output = json.loads(response['results'][0]['generated_text'])
+    try:
+        output = json.loads(response['results'][0]['generated_text'])
+    except:
+        output  =  {
+            "errors": [
+                {
+                "parameter": "Unclear Narative Idea",
+                "message": "give a correct and understandable logical ideas or according to the comunity guidelines"
+                }
+            ] 
+        }
     return output,token_genrated,token_input,response_time,cost
 
 

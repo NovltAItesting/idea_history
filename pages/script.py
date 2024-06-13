@@ -335,13 +335,24 @@ if selected_title in title_details:
 
 # Handling custom options
 elif selected_title == "Create your own title...":
-    selected_title_title = st.text_input("Define your own title:")
+    selected_title = st.text_input("Define your own title:")
     target_audience = st.text_input("Define your own Target Audience:")
     short_key_message = st.text_input("Define your own short key message:")
 
-
+error = """  
+        {
+            "errors": [
+                {
+                "parameter": "[parameter_name]",
+                "message": "[Specific error message for the parameter.]"
+                }
+            // Additional errors for other parameters.
+            ]
+        }
+            
+        """
 if st.button("Generate Output"):
-    output , token_genrated_idea, token_input_idea, response_time_idea, cost_idea = script(selected_title,post[post_type_selection],social_channel_selection,goal_selection,post_type_selection,target_audience,short_key_message)
+    output , token_genrated_idea, token_input_idea, response_time_idea, cost_idea = script(selected_title,post[post_type_selection],social_channel_selection,goal_selection,post_type_selection,target_audience,short_key_message,error)
     st.write(output)
 
 # Display the choice
